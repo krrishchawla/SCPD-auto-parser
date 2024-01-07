@@ -20,7 +20,7 @@ def run_hello_script(user_input, selected_values, root):
         script_dir = os.path.dirname(os.path.abspath(__file__))  # Get the directory of the running script (gui.py)
         process5_path = os.path.join(script_dir, 'process5.py')
         cmd = ['python3', process5_path, user_input] + selected_values
-        print(cmd)
+        print("Command for program:", cmd)
         subprocess.run(cmd)
     except FileNotFoundError:
         print("Error: process5.py not found!")
