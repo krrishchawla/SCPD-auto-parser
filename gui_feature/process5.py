@@ -181,6 +181,10 @@ def fillOneFile(course_name, input_file, directory_path, tuition_filter_list):
         'Tuition Group Desc': '',
         'Stu Current Acad Plan Code': ''
     }
+    if len(tuition_filter_list) == 0:
+        filter_on = False
+    else:
+        filter_on = True
     # Open the input and output files
     with open(input_file, 'r') as csv_input, open(output_file, 'w', newline='') as csv_output:
         reader = csv.DictReader(csv_input)
@@ -191,8 +195,34 @@ def fillOneFile(course_name, input_file, directory_path, tuition_filter_list):
         for row in reader:
             if row['Course Offering Subject-Num Desc'] == course_name:
                 # Tuition Group Filter
-                if row["Tuition Group Desc"] in tuition_filter_list:
-                # Split Last First Name into Last Name and First Name using ',' as the delimiter
+                if filter_on:
+                    if row["Tuition Group Desc"] in tuition_filter_list:
+                    # Split Last First Name into Last Name and First Name using ',' as the delimiter
+                        last_name, first_name = row['Last First Name'].split(',', 1)
+                        # Create a new dictionary with desired columns
+                        output_row = {
+                            'Course Offering Subject-Num Desc': row['Course Offering Subject-Num Desc'],
+                            'EMPLID': row['EMPLID'],
+                            'Preferred Email Address': row['Preferred Email Address'],
+                            'Last Name': last_name,
+                            'First Name': first_name.strip(),  # Remove leading/trailing spaces from first name
+                            'SUNet ID': row['SUNet ID'],
+                            'Tuition Group Desc': row['Tuition Group Desc'],
+                            'Stu Current Acad Plan Code': row['Stu Current Acad Plan Code']
+                        }
+                        compare_row = {
+                            'Course Offering Subject-Num Desc': row['Course Offering Subject-Num Desc'],
+                            'EMPLID': row['EMPLID'],
+                            'Preferred Email Address': row['Preferred Email Address'],
+                            'Last Name': last_name,
+                            'First Name': first_name.strip(),  # Remove leading/trailing spaces from first name
+                            'SUNet ID': row['SUNet ID'],
+                        }
+                        if compare_row not in seen:
+                            # Write the row to the output file
+                            writer.writerow(output_row)
+                            seen.append(compare_row)
+                else:
                     last_name, first_name = row['Last First Name'].split(',', 1)
                     # Create a new dictionary with desired columns
                     output_row = {
@@ -217,6 +247,8 @@ def fillOneFile(course_name, input_file, directory_path, tuition_filter_list):
                         # Write the row to the output file
                         writer.writerow(output_row)
                         seen.append(compare_row)
+
+
     # print(f"Data for course {course_name.replace(' ', '')} has been extracted and saved to {output_file}")
 
 
@@ -227,6 +259,11 @@ def compute(name_of_file, tuition_filter_list):
         None    
     """
     INPUT = name_of_file
+    print()
+
+    if len(tuition_filter_list) == 0:
+        print("No Tution Filter Provided. Not including any filter.")
+
     if INPUT == '':
         sys.exit("\n" + "-> ERROR : Filename not provided. This is the raw csv file that contains the main data.")
     # Construct the file path
@@ -238,6 +275,7 @@ def compute(name_of_file, tuition_filter_list):
 
     print('Operating on file', csv)
     print('Filtering by: ', tuition_filter_list)
+    print()
     current_dir = os.path.dirname(os.path.abspath(__file__))
     csv = os.path.join(current_dir, csv)
     # Create the directory tree and retrieve the list of files
@@ -267,10 +305,10 @@ def main():
         filters = sys.argv[2:]
         for fltr in filters:
             filter_list.append(fltr)
-        print(filter_list)
-        print(filters)
+        # print(filter_list)
+        # print(filters)
         # return
-        compute(name_of_file, filter_list)
+        compute(name_of_file, filters)
 
 
 if __name__ == '__main__':
