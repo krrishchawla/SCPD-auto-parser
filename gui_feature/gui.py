@@ -48,7 +48,7 @@ label2 = tk.Label(root, text="Select to include the tuition groups:")
 label2.pack()
 
 # Create a list of options for the dropdown
-options = ["Engineering Graduate", "Undergraduate Full Time", "Honor's Coop - Engineering", "SCPD NDO"]
+options = ["Honor's Coop - Engineering", "Honor's Coop - Regular", "SCPD NDO"]
 
 # Create a Listbox widget for multiple selection
 listbox = tk.Listbox(root, selectmode=tk.MULTIPLE)

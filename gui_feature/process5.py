@@ -266,9 +266,9 @@ def compute(name_of_file, tuition_filter_list):
 
     if INPUT == '':
         sys.exit("\n" + "-> ERROR : Filename not provided. This is the raw csv file that contains the main data.")
+    
     # Construct the file path
     csv = INPUT + '.csv'
-
     file_list = os.listdir(os.getcwd())
     if csv not in file_list:
         sys.exit("\n" + f"-> ERROR : File {csv} not present in your directory. Either the filename is incorrect, or the {csv} file needs to be added in the directory where this program is located.")
