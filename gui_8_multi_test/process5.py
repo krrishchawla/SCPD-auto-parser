@@ -160,7 +160,7 @@ def compute(name_of_file, tuition_filter_list):
     if not name_of_file:
         sys.exit("ERROR: Filename not provided.")
     
-    csv_file = f"{name_of_file}.csv"
+    csv_file = f"{name_of_file}"
     if not os.path.isfile(csv_file):
         sys.exit(f"ERROR: File {csv_file} not found in directory.")
 

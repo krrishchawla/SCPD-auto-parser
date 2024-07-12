@@ -1,12 +1,12 @@
 import os
 import tkinter as tk
-from tkinter import ttk, messagebox
+from tkinter import ttk, messagebox, filedialog
 import subprocess
 import threading
 import sys
 
 # Determine the directory where the executable or script is located
-if hasattr(sys, 'frozen'):
+if getattr(sys, 'frozen', False):
     script_dir = os.path.dirname(sys.executable)
 else:
     script_dir = os.path.dirname(os.path.abspath(__file__))
@@ -15,31 +15,29 @@ os.chdir(script_dir)
 
 # Function to handle button click
 def on_button_click():
-    user_input = entry.get()
+    # Prompt user to select a CSV file
+    csv_file_path = filedialog.askopenfilename(
+        initialdir=script_dir,
+        title="Select CSV File",
+        filetypes=[("CSV files", "*.csv"), ("All files", "*.*")]
+    )
+
+    if not csv_file_path:
+        messagebox.showerror("Error", "No CSV file selected.")
+        return
+
     selected_indices = listbox.curselection()
     selected_values = [options[idx] for idx in selected_indices]
 
-    if not user_input:
-        messagebox.showerror("Input Error", "Please enter the name of the CSV file.")
-        return
-
-    if '.csv' in user_input:
-        user_input = user_input.replace('.csv', '')
-
-    csv_file_path = os.path.join(script_dir, user_input + '.csv')
-    if not os.path.isfile(csv_file_path):
-        messagebox.showerror("CSV File Not Found", f"Error: {user_input}.csv not found! Make sure it is the right name (case sensitive)")
-        return
-
     # Start the progress bar and run the hello script in a separate thread to keep the GUI responsive
     progress_bar.start()
-    threading.Thread(target=run_hello_script, args=(user_input, selected_values)).start()
+    threading.Thread(target=run_hello_script, args=(csv_file_path, selected_values)).start()
 
-# Function to run the hello.py script with two arguments
-def run_hello_script(user_input, selected_values):
+# Function to run the process5.py script with two arguments
+def run_hello_script(csv_file_path, selected_values):
     try:
         process5_path = os.path.join(script_dir, 'process5.py')
-        cmd = ['python3', process5_path, user_input] + selected_values
+        cmd = ['python3', process5_path, csv_file_path] + selected_values
         print("Command for program:", cmd)
         subprocess.run(cmd)
     except FileNotFoundError:
@@ -58,17 +56,9 @@ root.title("SCPD Auto Parser")
 style = ttk.Style()
 style.configure("Blue.TButton", background="blue")
 
-# Heading for the text input field
-label1 = tk.Label(root, text="Type name of CSV file:")
-label1.pack()
-
-# Create an entry widget to input text
-entry = tk.Entry(root)
-entry.pack()
-
 # Heading for the checkboxes
-label2 = tk.Label(root, text="Select to include the tuition groups:")
-label2.pack()
+label1 = tk.Label(root, text="Select to filter the tuition groups:")
+label1.pack()
 
 # Create a list of options for the dropdown
 options = ["Honor's Coop - Engineering", "Honor's Coop - Regular", "SCPD NDO", "BOSP"]
@@ -79,9 +69,9 @@ for option in options:
     listbox.insert(tk.END, option)
 listbox.pack()
 
-# Create a button with a blue background
-button = tk.Button(root, text="Deploy Program", command=on_button_click, borderwidth=3, highlightbackground="blue", highlightcolor="blue")
-button.pack()
+# Create a button to select CSV file
+select_button = tk.Button(root, text="Select CSV File and Deploy", command=on_button_click, borderwidth=3, highlightbackground="blue", highlightcolor="blue")
+select_button.pack()
 
 # Create a progress bar
 progress_bar = ttk.Progressbar(root, mode='indeterminate')
