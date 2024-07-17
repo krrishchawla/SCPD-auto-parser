@@ -22,12 +22,11 @@ def get_current_datetime(fmt='%m-%d %I:%M:%S %p'):
     """Get the current date and time formatted according to the provided format."""
     return datetime.datetime.now().strftime(fmt)
 
-def make_dir():
+def make_dir(output_dir):
     """Create a directory for storing class files."""
     try:
-        current_dir = os.path.dirname(os.path.abspath(__file__))
         dir_name = 'Classes_' + get_current_datetime()
-        directory_path = os.path.join(current_dir, dir_name)
+        directory_path = os.path.join(output_dir, dir_name)
         os.makedirs(directory_path, exist_ok=True)
         print('Classes Folder Successfully Created on', get_current_datetime())
         return directory_path
@@ -49,10 +48,10 @@ def create_file(file, directory_path, date):
     make_one_file(file_path)
     return file_path
 
-def make_tree(input_file):
+def make_tree(input_file, output_dir):
     """Create a directory and a set of files based on the classes listed in the input CSV."""
     try:
-        directory_path = make_dir()
+        directory_path = make_dir(output_dir)
         date = get_current_datetime('%m-%d')
         list_of_files = get_classes(input_file)
         
@@ -155,19 +154,19 @@ def fill_one_file(course_name, input_file, directory_path, tuition_filter_list):
 
 
 
-def compute(name_of_file, tuition_filter_list):
+def compute(name_of_file, output_dir, tuition_filter_list):
     """Main computation function to create and fill class files based on input and filters."""
     if not name_of_file:
         sys.exit("ERROR: Filename not provided.")
     
-    csv_file = f"{name_of_file}.csv"
+    csv_file = f"{name_of_file}"
     if not os.path.isfile(csv_file):
         sys.exit(f"ERROR: File {csv_file} not found in directory.")
 
     try:
         print(f'Operating on file {csv_file}')
         print(f'Filtering by: {tuition_filter_list}')
-        directory_path, list_of_files = make_tree(csv_file)
+        directory_path, list_of_files = make_tree(csv_file, output_dir)
 
         # Use ProcessPoolExecutor to fill files concurrently
         with ProcessPoolExecutor() as executor:
@@ -185,12 +184,13 @@ def compute(name_of_file, tuition_filter_list):
 
 def main():
     """Entry point for the script."""
-    if len(sys.argv) < 2:
+    if len(sys.argv) < 3:
         print("No Arguments")
         return
     name_of_file = sys.argv[1]
-    filters = sys.argv[2:]
-    compute(name_of_file, filters)
+    output_dir = sys.argv[2]
+    filters = sys.argv[3:]
+    compute(name_of_file, output_dir, filters)
 
 if __name__ == '__main__':
     main()

@@ -1,10 +1,11 @@
 @echo off
-setlocal
-
-REM Determine the directory where the script is located
+REM Get the directory of the current script
 set current_dir=%~dp0
 
-REM Run the Python script
-python "%current_dir%gui.py"
+REM Change to the script's directory
+cd /d %current_dir%
 
-endlocal
+REM Run the Python script
+python gui.py
+
+pause
