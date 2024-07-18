@@ -18,7 +18,7 @@ def get_classes(file):
         print(f"Error reading classes: {e}")
         raise
 
-def get_current_datetime(fmt='%m-%d %I:%M:%S %p'):
+def get_current_datetime(fmt='%m-%d-%I-%M-%S-%p'):
     """Get the current date and time formatted according to the provided format."""
     return datetime.datetime.now().strftime(fmt)
 
