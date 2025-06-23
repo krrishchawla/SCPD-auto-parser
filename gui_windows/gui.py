@@ -64,7 +64,7 @@ def run_process_script(csv_file_path, output_dir, selected_values):
 
 # Create the main window
 root = tk.Tk()
-root.title("SCPD Auto Parser")
+root.title("CGOE Auto Parser")
 
 # Create a style for the button
 style = ttk.Style()
