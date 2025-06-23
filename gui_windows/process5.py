@@ -82,9 +82,12 @@ def get_filtered_rows(course_name, reader, tuition_filter_list):
     filter_on = bool(tuition_filter_list)
 
     for row in reader:
+        tuition_group_desc = row["Tuition Group Desc"]
+        if tuition_group_desc == 'SCPD NDO':
+            tuition_group_desc = 'CGOE NDO'
         if row['Course Offering Subject-Num Desc'] == course_name:
             write_row = False
-            if filter_on and row["Tuition Group Desc"] in tuition_filter_list:
+            if filter_on and tuition_group_desc in tuition_filter_list:
                 write_row = True
             elif bosp_filter and row['Study Agreement Code'][0] in ['O', 'X']:
                 write_row = True
@@ -102,7 +105,7 @@ def get_filtered_rows(course_name, reader, tuition_filter_list):
                     'Last Name': last_name,
                     'First Name': first_name.strip(),
                     'SUNet ID': row['SUNet ID'],
-                    'Tuition Group Desc': row['Tuition Group Desc'],
+                    'Tuition Group Desc': tuition_group_desc,
                     'Stu Current Acad Plan Code': row['Stu Current Acad Plan Code'],
                     'Study Agreement Code': bosp
                 }
