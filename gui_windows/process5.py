@@ -44,7 +44,7 @@ def make_one_file(file_path):
 
 def create_file(file, directory_path, date):
     """Helper function to create a single file."""
-    file_path = os.path.join(directory_path, file.replace(' ', '') + f' SCPD Roster {date}.csv')
+    file_path = os.path.join(directory_path, file.replace(' ', '') + f' CGOE Roster {date}.csv')
     make_one_file(file_path)
     return file_path
 
@@ -124,7 +124,7 @@ def get_filtered_rows(course_name, reader, tuition_filter_list):
 def fill_one_file(course_name, input_file, directory_path, tuition_filter_list):
     """Fill a single class file with filtered student data from the input CSV."""
     date = get_current_datetime('%m-%d')
-    output_file = os.path.join(directory_path, f'{course_name.replace(" ", "")} SCPD Roster {date}.csv')
+    output_file = os.path.join(directory_path, f'{course_name.replace(" ", "")} CGOE Roster {date}.csv')
     desired_columns = [
         'Course Offering Subject-Num Desc', 'EMPLID', 'Preferred Email Address',
         'Last Name', 'First Name', 'SUNet ID', 'Tuition Group Desc',
