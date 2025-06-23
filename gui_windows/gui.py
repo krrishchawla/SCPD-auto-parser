@@ -78,7 +78,7 @@ label1 = tk.Label(root, text="1. Select filters (can do multiple), if any:")
 label1.pack(pady=10)
 
 # Create a list of options for the dropdown
-options = ["Honor's Coop - Engineering", "Honor's Coop - Regular", "SCPD NDO", "BOSP"]
+options = ["Honor's Coop - Engineering", "Honor's Coop - Regular", "CGOE NDO", "BOSP"]
 
 # Create a Listbox widget for multiple selection
 listbox = tk.Listbox(root, selectmode=tk.MULTIPLE)
